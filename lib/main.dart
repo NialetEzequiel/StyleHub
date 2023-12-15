@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mysql1/mysql1.dart';
+import 'dart:async';
 
 void main() {
   runApp(MyApp());
+  sqlconnect();
 }
-
 // MyApp es el widget raíz de tu aplicación.
 class MyApp extends StatelessWidget {
   @override
@@ -52,16 +54,72 @@ class MyApp extends StatelessWidget {
                   ],
                 ),
               ),
+/*              GridView.count(
+                crossAxisCount: 2,
+                children: [
+
+                ],
+              )*/
             ],
           ),
         ),
 
         //Menu Lateral
         drawer: Drawer(
-
+          child: ListView(
+            padding: EdgeInsets.zero,
+              children: [
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text('Usuario'),
+                ),
+                ListTile(
+                  title: const Text('Mi Cuenta'),
+                  onTap: () {
+                    // Actualizar el estado
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: const Text('Mis Pedidos'),
+                  onTap: () {
+                    // Actualizar el estado
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: const Text('Contacto'),
+                  onTap: () {
+                    // Actualizar el estado
+                    // ...
+                  },
+                ),
+              ],
+          )
         ),
       ),
     ); //MaterialApp
   }
+}
+Future sqlconnect() async {
+  // Open a connection (testdb should already exist)
+  final conn = await MySqlConnection.connect(ConnectionSettings(
+      host: 'DESKTOP-85JNSLU',
+      port: 3306,
+      user: 'root',
+      db: 'SyleHub',
+      password: 'root'));
+
+  // Query the database using a parameterized query
+  var results = await conn.query(
+      'select Id, producto from Prueba');
+  for (var row in results) {
+    print('Id ${row[0]}, producto ${row[1]}');
+  }
+
+  // Finally, close the connection
+  await conn.close();
 }
 
